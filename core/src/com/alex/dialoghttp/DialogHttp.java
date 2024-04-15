@@ -2,7 +2,9 @@ package com.alex.dialoghttp;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -29,6 +31,32 @@ public class DialogHttp extends ApplicationAdapter
 			protected void result(Object object)
 			{
 				System.out.println("Option: " + object);
+				if (object=="http"){
+
+					Net.HttpResponseListener listener = new Net.HttpResponseListener() {
+						@Override
+						public void handleHttpResponse(Net.HttpResponse httpResponse) {
+							System.out.println("Rebut: "+ httpResponse.getResult());
+						}
+
+						@Override
+						public void failed(Throwable t) {
+							System.out.println("ERROR: (failiture)"+ t.toString());
+
+						}
+
+						@Override
+						public void cancelled() {
+							System.out.println("Cancelat");
+						}
+
+					};
+					HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+					Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("https://www.bytes.cat").build();
+					Gdx.net.sendHttpRequest(httpRequest, listener);
+				}else {
+					System.out.println("no fer res");
+				}
 				Timer.schedule(new Task()
 				{
 
