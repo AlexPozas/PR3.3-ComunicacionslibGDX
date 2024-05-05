@@ -30,34 +30,29 @@ public class DialogHttp extends ApplicationAdapter
 		{
 			protected void result(Object object)
 			{
+				HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+				Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("https://www.google.es").build();
+				Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
+					@Override
+					public void cancelled() {
+						System.out.println("Cancelled");
+					}
+
+					@Override
+					public void failed(Throwable t) {
+						System.out.println("FAILED: "+t.getMessage());
+					}
+
+					@Override
+					public void handleHttpResponse(Net.HttpResponse httpResponse) {
+						System.out.println("REBUT!");
+					}
+				});
+
+
+
 				System.out.println("Option: " + object);
-				if (object=="http"){
-
-					Net.HttpResponseListener listener = new Net.HttpResponseListener() {
-						@Override
-						public void handleHttpResponse(Net.HttpResponse httpResponse) {
-							System.out.println("Rebut: "+ httpResponse.getResult());
-						}
-
-						@Override
-						public void failed(Throwable t) {
-							System.out.println("ERROR: (failiture)"+ t.toString());
-
-						}
-
-						@Override
-						public void cancelled() {
-							System.out.println("Cancelat");
-						}
-
-					};
-					HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-					Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("https://www.bytes.cat").build();
-					Gdx.net.sendHttpRequest(httpRequest, listener);
-				}else {
-					System.out.println("no fer res");
-				}
-				Timer.schedule(new Task()
+				Timer.schedule(new Timer.Task()
 				{
 
 					@Override
@@ -72,8 +67,7 @@ public class DialogHttp extends ApplicationAdapter
 		endDialog.button("Option 1", 1L);
 		endDialog.button("Option 2", 2L);
 
-
-		Timer.schedule(new Task()
+		Timer.schedule(new Timer.Task()
 		{
 
 			@Override
@@ -82,6 +76,7 @@ public class DialogHttp extends ApplicationAdapter
 				endDialog.show(stage);
 			}
 		}, 1);
+
 
 	}
 
